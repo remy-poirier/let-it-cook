@@ -4,11 +4,20 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.css'
 import Root from '@/routes/root.tsx'
 import { ThemeProvider } from '@/components/theme-provider.tsx'
+import ErrorPage from '@/routes/not-found.tsx'
+import Investments from '@/routes/investments/investments.tsx'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: 'investments',
+        element: <Investments />,
+      },
+    ],
   },
 ])
 

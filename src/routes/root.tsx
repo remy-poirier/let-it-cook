@@ -11,7 +11,7 @@ export default function Root() {
               <span className="font-bold lg:inline-block">LetItCook</span>
             </a>
             <nav className="flex items-center gap-4 text-sm lg:gap-6">
-              <a href="/investments" className="transition-colors hover:text-foreground/80 text-foreground/60">Investissements</a>
+              <a href="/investments/investments" className="transition-colors hover:text-foreground/80 text-foreground/60">Investissements</a>
               <a href="/dividends" className="transition-colors hover:text-foreground/80 text-foreground/60">Dividendes</a>
             </nav>
           </div>
@@ -24,7 +24,9 @@ export default function Root() {
         </div>
       </header>
       <main className="flex-1">
-        <Outlet />
+        <div className="container">
+          <Outlet />
+        </div>
       </main>
     </div>
   )
