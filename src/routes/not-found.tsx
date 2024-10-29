@@ -1,4 +1,4 @@
-import { isRouteErrorResponse, useRouteError } from 'react-router-dom'
+import { isRouteErrorResponse, Link, useRouteError } from 'react-router-dom'
 import { Button } from '@/components/ui/button.tsx'
 
 export default function ErrorPage() {
@@ -28,7 +28,7 @@ export default function ErrorPage() {
         <i>{errorMessage}</i>
       </p>
       <div>
-        <Button><a href="/">Retour à l&apos;accueil</a></Button>
+        <Button><Link to="/">Retour à l&apos;accueil</Link></Button>
       </div>
     </div>
   )

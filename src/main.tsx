@@ -6,6 +6,7 @@ import Root from '@/routes/root.tsx'
 import { ThemeProvider } from '@/components/theme-provider.tsx'
 import ErrorPage from '@/routes/not-found.tsx'
 import Investments from '@/routes/investments/investments.tsx'
+import Dividends from '@/routes/dividends/dividends.tsx'
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
       {
         path: 'investments',
         element: <Investments />,
+      },
+      {
+        path: 'dividends',
+        element: <Dividends />,
       },
     ],
   },

@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
 import { ModeToggle } from '@/components/mode-toggle.tsx'
 
 export default function Root() {
@@ -11,8 +11,20 @@ export default function Root() {
               <span className="font-bold lg:inline-block">LetItCook</span>
             </a>
             <nav className="flex items-center gap-4 text-sm lg:gap-6">
-              <a href="/investments" className="transition-colors hover:text-foreground/80 text-foreground/60">Investissements</a>
-              <a href="/dividends" className="transition-colors hover:text-foreground/80 text-foreground/60">Dividendes</a>
+              <Link
+                to="/investments"
+                data-active={location.pathname === '/investments'}
+                className="transition-colors hover:text-foreground/80 text-foreground/60 data-[active=true]:text-foreground"
+              >
+                Investissements
+              </Link>
+              <Link
+                to="/dividends"
+                data-active={location.pathname === '/dividends'}
+                className="transition-colors hover:text-foreground/80 text-foreground/60 data-[active=true]:text-foreground"
+              >
+                Dividendes
+              </Link>
             </nav>
           </div>
           <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
