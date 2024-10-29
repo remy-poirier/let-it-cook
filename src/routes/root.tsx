@@ -1,7 +1,9 @@
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import { ModeToggle } from '@/components/mode-toggle.tsx'
 
 export default function Root() {
+  const location = useLocation()
+
   return (
     <div className="relative min-h-screen flex flex-col bg-background">
       <header className="sticky top-0 z-50 w-full backdrop-blur">

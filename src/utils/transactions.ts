@@ -1,4 +1,5 @@
 import { CommonTransaction } from '@/routes/investments/investments.tsx'
+import { RealEstateDataEntry } from '@/hooks/useData.ts'
 
 type TransactionWithAccumulatedAmount = CommonTransaction & { accumulatedAmount: number }
 
@@ -14,5 +15,27 @@ export const TransactionsUtils = {
 
       return [...acc, { ...transaction, accumulatedAmount: newAccumulatedAmount }]
     }, [] as TransactionWithAccumulatedAmount[])
+  },
+
+  realEstate: {
+    totalProfitability: (dividends: RealEstateDataEntry): number => {
+      // This will filter all positive dividends and sums them
+      return dividends.dividends
+        .map(dividend => dividend.transactions)
+        .flat()
+        .filter(transaction => transaction.value > 0)
+        .reduce((acc, transaction) => acc + transaction.value, 0)
+    },
+    totalTax: (dividends: RealEstateDataEntry): number => {
+      // This will filter all negative dividends and sums them
+      return dividends.dividends
+        .map(dividend => dividend.transactions)
+        .flat()
+        .filter(transaction => transaction.value < 0)
+        .reduce((acc, transaction) => acc + transaction.value, 0)
+    },
+    totalNetProfitability: (transactions: RealEstateDataEntry): number => {
+      return TransactionsUtils.realEstate.totalProfitability(transactions) + TransactionsUtils.realEstate.totalTax(transactions)
+    },
   },
 }

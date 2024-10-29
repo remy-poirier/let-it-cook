@@ -1,5 +1,4 @@
 import dataJson from '@/assets/patrimony.json'
-import Statistic from '@/routes/investments/statistic.tsx'
 import {
   type ChartConfig,
   ChartContainer,
@@ -9,19 +8,16 @@ import {
 } from '@/components/ui/chart.tsx'
 import {
   Area,
-  AreaChart, Bar,
-  BarChart,
+  AreaChart,
   CartesianGrid,
   Label, Pie, PieChart,
-  PolarRadiusAxis,
-  RadialBar,
-  RadialBarChart, Sector,
-  XAxis, YAxis,
+  Sector,
+  XAxis,
 } from 'recharts'
 import { useMemo, useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.tsx'
 import { TransactionsUtils } from '@/utils/transactions.ts'
-import { currencyFormatter, dateFormatter } from '@/utils/formatters.ts'
+import { currencyFormatter } from '@/utils/formatters.ts'
 import { FaPiggyBank } from 'react-icons/fa'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx'
 import { PieSectorDataItem } from 'recharts/types/polar/Pie'
@@ -126,7 +122,6 @@ export default function Investments() {
     () => totalValues.findIndex(item => item.key === pieChartActiveKind),
     [pieChartActiveKind],
   )
-  console.log('investment kinds => ', data)
   return (
     <div className="space-y-4">
       <h2 className="text-3xl font-bold tracking-tight">Mes investissements</h2>
@@ -211,7 +206,14 @@ export default function Investments() {
               <PieChart>
                 <ChartTooltip
                   cursor={false}
-                  content={<ChartTooltipContent hideLabel valueFormatter={value => <span className="font-bold ml-2">{currencyFormatter.format(value)}</span>} />}
+                  content={(
+                    <ChartTooltipContent
+                      hideLabel
+                      valueFormatter={value => (
+                        <span className="font-bold ml-2">{typeof value === 'number' ? currencyFormatter.format(value) : value}</span>
+                      )}
+                    />
+                  )}
                 />
                 <Pie
                   data={totalValues}
@@ -256,7 +258,7 @@ export default function Investments() {
                               y={(viewBox.cy || 0) + 24}
                               className="fill-muted-foreground"
                             >
-                              Visitors
+                              {data[pieChartActiveKind as EntryRecords].label}
                             </tspan>
                           </text>
                         )
