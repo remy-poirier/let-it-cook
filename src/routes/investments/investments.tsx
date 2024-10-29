@@ -1,9 +1,11 @@
 import dataJson from '@/assets/patrimony.json'
 import Statistic from '@/routes/investments/statistic.tsx'
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart.tsx'
-import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts'
+import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.tsx'
+import { TransactionsUtils } from '@/utils/transactions.ts'
+import { currencyFormatter } from '@/utils/formatters.ts'
 
 export enum InvestmentKind {
   BOOKLET = 'BOOKLET',
@@ -18,7 +20,7 @@ interface CommonDataEntry<T> {
   transactions: T[]
 }
 
-interface CommonTransaction {
+export interface CommonTransaction {
   date: string
   amount: number
   label: string
@@ -49,25 +51,27 @@ export default function Investments() {
   const data: Data = dataJson as Data
   const [activeChart, setActiveChart] = useState<EntryRecords>('bricks')
 
-  const chartData = [
-    { month: 'January', desktop: 186, mobile: 80 },
-    { month: 'February', desktop: 305, mobile: 200 },
-    { month: 'March', desktop: 237, mobile: 120 },
-    { month: 'April', desktop: 73, mobile: 190 },
-    { month: 'May', desktop: 209, mobile: 130 },
-    { month: 'June', desktop: 214, mobile: 140 },
-  ]
+  const transactionsChart = TransactionsUtils.accumulate(data[activeChart].transactions)
 
   const chartConfig = {
-    desktop: {
-      label: 'Desktop',
-      color: '#2563eb',
+    views: {
+      label: 'Montant',
     },
-    mobile: {
-      label: 'Mobile',
-      color: '#60a5fa',
+    ldds_credit_agricole: {
+      label: 'LDDS Crédit Agricole',
+      color: 'hsl(var(--chart-1))',
+    },
+    bricks: {
+      label: 'Bricks',
+      color: 'hsl(var(--chart-2))',
+    },
+    epsor: {
+      label: 'Epsor - PEE',
+      color: 'hsl(var(--chart-3))',
     },
   } satisfies ChartConfig
+
+  console.log('transactionsChart', transactionsChart)
 
   return (
     <div className="space-y-4">
@@ -83,8 +87,7 @@ export default function Investments() {
           <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
             <CardTitle>Graphique</CardTitle>
             <CardDescription>
-              Représentant l&apos;évolution de votre patrimoine sur les 12 derniers
-              mois
+              Représentant l&apos;évolution de votre patrimoine par catégorie
             </CardDescription>
           </div>
           <div className="flex">
@@ -96,28 +99,65 @@ export default function Investments() {
                   key={`${key}-chart`}
                   data-active={activeChart === chartKey}
                   className="flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6"
+                  onClick={() => setActiveChart(chartKey)}
                 >
-                  {data[chartKey].label}
+                  <span className="text-xs text-muted-foreground">
+                    {data[chartKey].label}
+                  </span>
+                  <span className="text-lg font-bold leading-none sm:text-3xl">
+                    {currencyFormatter.format(TransactionsUtils.totalValue(data[chartKey].transactions))}
+                  </span>
                 </button>
               )
             })}
           </div>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={chartConfig} className="min-h-[200px]">
-            <BarChart accessibilityLayer data={chartData}>
+          <ChartContainer config={chartConfig} className="aspect-auto h-[200px] w-full">
+            <AreaChart
+              accessibilityLayer
+              data={transactionsChart}
+              stackOffset="expand"
+            >
               <CartesianGrid vertical={false} />
               <XAxis
-                dataKey="month"
+                dataKey="date"
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}
-                tickFormatter={value => value.slice(0, 3)}
+                tickFormatter={(value) => {
+                  const date = new Date(value)
+                  return date.toLocaleDateString('fr-FR', {
+                    month: 'short',
+                    day: 'numeric',
+                  })
+                }}
               />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-              <Bar dataKey="desktop" fill="var(--color-mobile)" radius={4} />
-            </BarChart>
+              <ChartTooltip
+                cursor={false}
+                content={(
+                  <ChartTooltipContent
+                    indicator="line"
+                    nameKey="views"
+                    labelFormatter={(value) => {
+                      return new Date(value).toLocaleDateString('fr-FR', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })
+                    }}
+                    valueFormatter={value => currencyFormatter.format(value as number)}
+                  />
+                )}
+              />
+              <Area
+                dataKey="accumulatedAmount"
+                type="natural"
+                fill={`var(--color-${activeChart})`}
+                stroke={`var(--color-${activeChart})`}
+                fillOpacity={0.4}
+              />
+            </AreaChart>
           </ChartContainer>
         </CardContent>
       </Card>
