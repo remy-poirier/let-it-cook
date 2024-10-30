@@ -1,5 +1,5 @@
 import { CommonTransaction } from '@/routes/investments/investments.tsx'
-import { RealEstateDataEntry, RealEstateDividend } from '@/domain/models.ts'
+import { ETFStatement, PEIDataEntry, RealEstateDataEntry, RealEstateDividend } from '@/domain/models.ts'
 
 type TransactionWithAccumulatedAmount = CommonTransaction & { accumulatedAmount: number }
 
@@ -52,6 +52,26 @@ export const TransactionsUtils = {
 
     totalNetProfitabilityForDividendEntry: (dividendEntry: RealEstateDividend): number => {
       return TransactionsUtils.realEstate.profitabilityForDividendEntry(dividendEntry) + TransactionsUtils.realEstate.taxForDividendEntry(dividendEntry)
+    },
+  },
+
+  epsor: {
+    getLastStatement: (statements: ETFStatement[]): ETFStatement => {
+      // Sort by date and keep the most recent one
+      return statements.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0]
+    },
+
+    estimatedAmount: (entry: PEIDataEntry): number => {
+      const totalValue = TransactionsUtils.totalValue(entry.transactions)
+      const lastStatementRate = TransactionsUtils.epsor.getLastStatement(entry.statements).rate
+
+      // Round to lower integer
+      return Math.floor(totalValue * lastStatementRate / 100)
+    },
+
+    // This will add the last statement rate to the total value
+    amountWithLastStatement: (entry: PEIDataEntry): number => {
+      return TransactionsUtils.totalValue(entry.transactions) + TransactionsUtils.epsor.estimatedAmount(entry)
     },
   },
 }

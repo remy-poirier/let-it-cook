@@ -76,7 +76,7 @@ const chartConfig = {
     color: 'hsl(var(--chart-2))',
   },
   epsor: {
-    label: 'Epsor - PEE',
+    label: 'Epsor - PEI',
     color: 'hsl(var(--chart-3))',
   },
 } satisfies ChartConfig
@@ -95,7 +95,7 @@ const pieChartConfig = {
     color: 'hsl(var(--chart-2))',
   },
   epsor: {
-    label: 'Epsor - PEE',
+    label: 'Epsor - PEI',
     color: 'hsl(var(--chart-3))',
   },
 } satisfies ChartConfig

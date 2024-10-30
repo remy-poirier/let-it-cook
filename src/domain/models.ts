@@ -39,8 +39,22 @@ export type RealEstateDataEntry = CommonDataEntry<RealEstateTransaction> & {
   kind: InvestmentKind.REAL_ESTATE
   dividends: RealEstateDividend[]
 }
+
+export type ETFStatement = {
+  date: string
+  rate: number
+}
+
 export type ETFDataEntry = CommonDataEntry<CommonTransaction> & {
   kind: InvestmentKind.ETF
+  employer_contribution: number
+  statements: ETFStatement[]
+}
+
+export type PEIDataEntry = CommonDataEntry<CommonTransaction> & {
+  kind: InvestmentKind.ETF
+  employer_contribution: number
+  statements: ETFStatement[]
 }
 
 export type DataEntry = BookletDataEntry | RealEstateDataEntry | ETFDataEntry
@@ -50,7 +64,7 @@ export type EntryRecords = 'ldds_credit_agricole' | 'bricks' | 'epsor'
 export type EntryRecordsMapping = {
   ldds_credit_agricole: BookletDataEntry
   bricks: RealEstateDataEntry
-  epsor: ETFDataEntry
+  epsor: PEIDataEntry
 }
 
 export type Data = {

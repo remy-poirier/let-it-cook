@@ -1,14 +1,15 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.tsx'
-import { useData } from '@/hooks/useData.ts'
+import { useData, useEpsor } from '@/hooks/useData.ts'
 import { TransactionsUtils } from '@/utils/transactions.ts'
-import { currencyFormatter, dateFormatter } from '@/utils/formatters.ts'
+import { currencyFormatter, dateFormatter, percentageFormatter } from '@/utils/formatters.ts'
 import { useNewsFeed } from '@/hooks/useNewsFeed.ts'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar.tsx'
 import { GiPayMoney, GiReceiveMoney } from 'react-icons/gi'
 
 export default function Dividends() {
-  const { bricksData, ldds_credit_agricole } = useData()
+  const { bricksData, ldds_credit_agricole, epsor } = useData()
   const newsFeed = useNewsFeed(5)
+  const { lastStatement, estimatedAmount, amountWithLastStatement } = useEpsor()
 
   return (
     <div className="space-y-4">
@@ -21,7 +22,7 @@ export default function Dividends() {
               <CardDescription>Rendements immobilier</CardDescription>
             </CardHeader>
             <CardContent className="grid grid-cols-1 divide-y text-sm">
-              <span className="flex justify-between p-2">
+              <span className="flex justify-between py-2">
                 <span>
                   Revenus
                 </span>
@@ -29,7 +30,7 @@ export default function Dividends() {
                   {currencyFormatter.format(TransactionsUtils.realEstate.totalProfitability(bricksData))}
                 </span>
               </span>
-              <span className="flex justify-between p-2">
+              <span className="flex justify-between py-2">
                 <span>
                   Fiscalité (30%)
                 </span>
@@ -37,7 +38,7 @@ export default function Dividends() {
                   {currencyFormatter.format(TransactionsUtils.realEstate.totalTax(bricksData))}
                 </span>
               </span>
-              <span className="flex justify-between p-2">
+              <span className="flex justify-between py-2">
                 <span>
                   Total net
                 </span>
@@ -68,10 +69,46 @@ export default function Dividends() {
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle>Epsor - PEE</CardTitle>
+              <CardTitle>Epsor - PEI</CardTitle>
             </CardHeader>
-            <CardContent>
-              TODO
+            <CardContent className="grid gap-6 text-sm">
+              <span className="flex justify-between">
+                <div className="grid">
+                  <span>Plus-value</span>
+                  <span
+                    className="text-sm text-muted-foreground"
+                  >
+                    {dateFormatter.format(new Date(lastStatement.date))}
+                  </span>
+                </div>
+                <div className="grid text-right">
+                  <span className="font-bold">
+                    {currencyFormatter.format(estimatedAmount)}
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    Taux:
+                    {' '}
+                    {percentageFormatter.format(lastStatement.rate / 100)}
+                  </span>
+                </div>
+              </span>
+              <span className="flex justify-between">
+                <div className="grid">
+                  <span>Total estimé</span>
+                </div>
+                <div className="grid text-right">
+                  <span className="font-bold">
+                    {currencyFormatter.format(amountWithLastStatement)}
+                  </span>
+                </div>
+              </span>
+              <hr />
+              <span className="flex justify-between">
+                <span>Contribution employeur annuelle</span>
+                <span className="font-bold">
+                  {currencyFormatter.format(epsor.employer_contribution)}
+                </span>
+              </span>
             </CardContent>
           </Card>
         </div>
@@ -79,7 +116,7 @@ export default function Dividends() {
           <Card>
             <CardHeader>
               <CardTitle>Actualités</CardTitle>
-              <CardDescription>5 dernières actualités</CardDescription>
+              <CardDescription>Que s&apos;est-il passé récemment ?</CardDescription>
             </CardHeader>
             <CardContent>
               {newsFeed.map(entry => (

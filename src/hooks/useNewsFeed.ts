@@ -1,7 +1,7 @@
 import dataJson from '@/assets/patrimony.json'
 import { Data } from '@/domain/models.ts'
 import { TransactionsUtils } from '@/utils/transactions.ts'
-import { currencyFormatter, dateFormatter } from '@/utils/formatters.ts'
+import { currencyFormatter } from '@/utils/formatters.ts'
 
 interface NewsFeedEntry {
   kind: 'INVESTMENT' | 'DIVIDEND'
