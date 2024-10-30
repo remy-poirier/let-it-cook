@@ -1,5 +1,5 @@
 import { CommonTransaction } from '@/routes/investments/investments.tsx'
-import { RealEstateDataEntry } from '@/hooks/useData.ts'
+import { RealEstateDataEntry, RealEstateDividend } from '@/domain/models.ts'
 
 type TransactionWithAccumulatedAmount = CommonTransaction & { accumulatedAmount: number }
 
@@ -36,6 +36,22 @@ export const TransactionsUtils = {
     },
     totalNetProfitability: (transactions: RealEstateDataEntry): number => {
       return TransactionsUtils.realEstate.totalProfitability(transactions) + TransactionsUtils.realEstate.totalTax(transactions)
+    },
+
+    profitabilityForDividendEntry: (dividendEntry: RealEstateDividend): number => {
+      return dividendEntry.transactions
+        .filter(transaction => transaction.value > 0)
+        .reduce((acc, transaction) => acc + transaction.value, 0)
+    },
+
+    taxForDividendEntry: (dividendEntry: RealEstateDividend): number => {
+      return dividendEntry.transactions
+        .filter(transaction => transaction.value < 0)
+        .reduce((acc, transaction) => acc + transaction.value, 0)
+    },
+
+    totalNetProfitabilityForDividendEntry: (dividendEntry: RealEstateDividend): number => {
+      return TransactionsUtils.realEstate.profitabilityForDividendEntry(dividendEntry) + TransactionsUtils.realEstate.taxForDividendEntry(dividendEntry)
     },
   },
 }

@@ -1,10 +1,15 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.tsx'
 import { useData } from '@/hooks/useData.ts'
 import { TransactionsUtils } from '@/utils/transactions.ts'
-import { currencyFormatter } from '@/utils/formatters.ts'
+import { currencyFormatter, dateFormatter } from '@/utils/formatters.ts'
+import { useNewsFeed } from '@/hooks/useNewsFeed.ts'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar.tsx'
+import { GiPayMoney, GiReceiveMoney } from 'react-icons/gi'
 
 export default function Dividends() {
   const { bricksData, ldds_credit_agricole } = useData()
+  const newsFeed = useNewsFeed(5)
+
   return (
     <div className="space-y-4">
       <h2 className="text-3xl font-bold tracking-tight">Mes dividendes</h2>
@@ -74,9 +79,37 @@ export default function Dividends() {
           <Card>
             <CardHeader>
               <CardTitle>Actualités</CardTitle>
+              <CardDescription>5 dernières actualités</CardDescription>
             </CardHeader>
             <CardContent>
-              TODO
+              {newsFeed.map(entry => (
+                <div
+                  key={`${entry.label}-${entry.date}-${entry.kind}`}
+                  className="flex justify-between p-2"
+                >
+                  <div className="flex gap-4">
+                    <Avatar className="size-8">
+                      <AvatarFallback
+                        data-kind={entry.kind}
+                        className="data-[kind=INVESTMENT]:bg-accent data-[kind=DIVIDEND]:bg-primary"
+                      >
+                        {entry.kind === 'INVESTMENT' ? <GiPayMoney size={16} /> : <GiReceiveMoney size={16} />}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="flex flex-col gap-1">
+                      <span>
+                        {entry.label}
+                      </span>
+                      <span className="text-muted-foreground text-xs">{dateFormatter.format(new Date(entry.date))}</span>
+                      <span className="text-muted-foreground text-xs">{entry.description}</span>
+                    </span>
+                  </div>
+
+                  <span className="font-bold">
+                    {currencyFormatter.format(entry.amount)}
+                  </span>
+                </div>
+              ))}
             </CardContent>
           </Card>
         </div>
