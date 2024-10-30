@@ -1,11 +1,26 @@
-import { CommonTransaction } from '@/routes/investments/investments.tsx'
-import { ETFStatement, PEIDataEntry, RealEstateDataEntry, RealEstateDividend } from '@/domain/models.ts'
+import {
+  CommonTransaction,
+  Data,
+  ETFStatement,
+  PEIDataEntry,
+  RealEstateDataEntry,
+  RealEstateDividend,
+} from '@/domain/models.ts'
 
 type TransactionWithAccumulatedAmount = CommonTransaction & { accumulatedAmount: number }
 
 export const TransactionsUtils = {
   totalValue: (transactions: CommonTransaction[]): number => {
     return transactions.reduce((acc, transaction) => acc + transaction.amount, 0)
+  },
+
+  totalInvestmentPatrimony: (data: Data): number => {
+    // Compute all transactions of all investments
+    const lddTotal = TransactionsUtils.totalValue(data.ldds_credit_agricole.transactions)
+    const bricksTotal = TransactionsUtils.totalValue(data.bricks.transactions)
+    const epsorTotal = TransactionsUtils.totalValue(data.epsor.transactions)
+
+    return lddTotal + bricksTotal + epsorTotal
   },
 
   accumulate: (transactions: CommonTransaction[]): TransactionWithAccumulatedAmount[] => {

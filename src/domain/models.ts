@@ -70,3 +70,11 @@ export type EntryRecordsMapping = {
 export type Data = {
   [K in keyof EntryRecordsMapping]: EntryRecordsMapping[K]
 }
+
+export interface NewsFeedEntry {
+  kind: 'INVESTMENT' | 'DIVIDEND'
+  date: string
+  label: string
+  description: string
+  amount: number
+}

@@ -10,6 +10,7 @@ export const useData = () => {
     ldds_credit_agricole: data.ldds_credit_agricole,
     bricksData: data.bricks,
     epsor: data.epsor,
+    investedAmount: TransactionsUtils.totalInvestmentPatrimony(data),
   }
 }
 
