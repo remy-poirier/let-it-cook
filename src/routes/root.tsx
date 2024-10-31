@@ -14,18 +14,18 @@ export default function Root() {
             </a>
             <nav className="flex items-center gap-4 text-sm lg:gap-6">
               <Link
-                to="/investments"
-                data-active={location.pathname === '/investments'}
+                to="/dashboard"
+                data-active={location.pathname === '/dashboard'}
                 className="transition-colors hover:text-foreground/80 text-foreground/60 data-[active=true]:text-foreground"
               >
-                Investissements
+                Tableau de bord
               </Link>
               <Link
-                to="/dividends"
-                data-active={location.pathname === '/dividends'}
+                to="/patrimony"
+                data-active={location.pathname === '/patrimony'}
                 className="transition-colors hover:text-foreground/80 text-foreground/60 data-[active=true]:text-foreground"
               >
-                Dividendes
+                Patrimoine
               </Link>
             </nav>
           </div>

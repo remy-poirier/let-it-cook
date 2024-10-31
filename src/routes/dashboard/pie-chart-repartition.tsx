@@ -1,5 +1,4 @@
 import {
-  type ChartConfig,
   ChartContainer,
   ChartStyle,
   ChartTooltip,
@@ -14,25 +13,7 @@ import { useMemo, useState } from 'react'
 import { useData } from '@/hooks/useData.ts'
 import { EntryRecords } from '@/domain/models.ts'
 import { TransactionsUtils } from '@/utils/transactions.ts'
-
-const pieChartConfig = {
-  value: {
-    label: 'Montant',
-    color: '',
-  },
-  ldds_credit_agricole: {
-    label: 'LDDS Crédit Agricole',
-    color: 'hsl(var(--chart-1))',
-  },
-  bricks: {
-    label: 'Bricks',
-    color: 'hsl(var(--chart-2))',
-  },
-  epsor: {
-    label: 'Epsor - PEI',
-    color: 'hsl(var(--chart-3))',
-  },
-} satisfies ChartConfig
+import { chartConfig } from '@/utils/chart-config.ts'
 
 export default function PieChartRepartition() {
   const { fullData } = useData()
@@ -42,7 +23,7 @@ export default function PieChartRepartition() {
     acc.push({
       key,
       value: TransactionsUtils.totalValue(value.transactions),
-      fill: pieChartConfig[key as keyof typeof pieChartConfig]?.color ?? 'hsl(0, 0%, 0%)',
+      fill: chartConfig[key as keyof typeof chartConfig]?.color ?? 'hsl(0, 0%, 0%)',
     })
     return acc
   }, [] as { key: string, value: number, fill: string }[])
@@ -54,7 +35,7 @@ export default function PieChartRepartition() {
   )
   return (
     <Card data-chart="interactive-pie" className="col-span-1">
-      <ChartStyle id="interactive-pie" config={pieChartConfig} />
+      <ChartStyle id="interactive-pie" config={chartConfig} />
       <CardHeader className="flex-row items-start space-y-0 pb-0">
         <div className="grid gap-1">
           <CardTitle>Répartition</CardTitle>
@@ -69,7 +50,7 @@ export default function PieChartRepartition() {
           </SelectTrigger>
           <SelectContent align="end" className="rounded-sm">
             {investmentKinds.map((key: string) => {
-              const config = pieChartConfig[key as keyof typeof pieChartConfig]
+              const config = chartConfig[key as keyof typeof chartConfig]
               if (!config) {
                 return null
               }
@@ -97,7 +78,7 @@ export default function PieChartRepartition() {
       <CardContent className="flex flex-1 items-center pb-0">
         <ChartContainer
           id="interactive-pie"
-          config={pieChartConfig}
+          config={chartConfig}
           className="mx-auto aspect-square w-full max-w-[300px]"
         >
           <PieChart>

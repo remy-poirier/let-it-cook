@@ -45,10 +45,21 @@ export type ETFStatement = {
   rate: number
 }
 
+export type ETFStockMarketStatement = {
+  date: string
+  amount: number
+  label: string
+}
+
+export type ETFStockMarket = {
+  investments: CommonTransaction[]
+  statements: ETFStockMarketStatement[]
+}
+
 export type ETFDataEntry = CommonDataEntry<CommonTransaction> & {
   kind: InvestmentKind.ETF
-  employer_contribution: number
-  statements: ETFStatement[]
+  opening_date: string
+  stock_market: ETFStockMarket
 }
 
 export type PEIDataEntry = CommonDataEntry<CommonTransaction> & {
@@ -57,14 +68,13 @@ export type PEIDataEntry = CommonDataEntry<CommonTransaction> & {
   statements: ETFStatement[]
 }
 
-export type DataEntry = BookletDataEntry | RealEstateDataEntry | ETFDataEntry
-
-export type EntryRecords = 'ldds_credit_agricole' | 'bricks' | 'epsor'
+export type EntryRecords = 'ldds_credit_agricole' | 'bricks' | 'epsor' | 'pea'
 
 export type EntryRecordsMapping = {
   ldds_credit_agricole: BookletDataEntry
   bricks: RealEstateDataEntry
   epsor: PEIDataEntry
+  pea: ETFDataEntry
 }
 
 export type Data = {
@@ -72,7 +82,7 @@ export type Data = {
 }
 
 export interface NewsFeedEntry {
-  kind: 'INVESTMENT' | 'DIVIDEND'
+  kind: 'INVESTMENT' | 'DIVIDEND' | 'INFO'
   date: string
   label: string
   description: string

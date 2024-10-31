@@ -5,7 +5,7 @@ import { currencyFormatter } from '@/utils/formatters.ts'
 
 export const useNewsFeed = (
   nbToKeep?: number,
-  kind?: 'INVESTMENT' | 'DIVIDEND',
+  kind?: NewsFeedEntry['kind'],
 ) => {
   const data = dataJson as Data
 
@@ -44,6 +44,27 @@ export const useNewsFeed = (
           date: transaction.date,
         })
       })
+
+    data.pea
+      .transactions.forEach((transaction) => {
+        newsFeed.push({
+          kind: 'INVESTMENT',
+          label: 'PEA',
+          description: transaction.label,
+          amount: transaction.amount,
+          date: transaction.date,
+        })
+      })
+
+    data.pea.stock_market.investments.forEach((transaction) => {
+      newsFeed.push({
+        kind: 'INVESTMENT',
+        label: 'Achat d\'actions',
+        description: transaction.label,
+        amount: transaction.amount,
+        date: transaction.date,
+      })
+    })
   }
 
   if (!kind || kind === 'DIVIDEND') {
@@ -59,6 +80,28 @@ export const useNewsFeed = (
           date: dividend.date,
         })
       })
+  }
+
+  if (!kind || kind === 'INFO') {
+    data.pea.stock_market.statements.forEach((statement) => {
+      newsFeed.push({
+        kind: 'INFO',
+        label: 'Valorisation PEA',
+        description: statement.label,
+        amount: statement.amount,
+        date: statement.date,
+      })
+    })
+
+    data.epsor.statements.forEach((statement) => {
+      newsFeed.push({
+        kind: 'INFO',
+        label: 'Epsor',
+        description: 'Valorisation du compte à date',
+        amount: statement.rate,
+        date: statement.date,
+      })
+    })
   }
 
   // Sort them by date, form the most recent to the oldest

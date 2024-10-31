@@ -5,8 +5,8 @@ import './index.css'
 import Root from '@/routes/root.tsx'
 import { ThemeProvider } from '@/components/theme-provider.tsx'
 import ErrorPage from '@/routes/not-found.tsx'
-import Investments from '@/routes/investments/investments.tsx'
-import Dividends from '@/routes/dividends/dividends.tsx'
+import Dashboard from '@/routes/dashboard/dashboard.tsx'
+import Patrimony from '@/routes/patrimony/patrimony.tsx'
 
 const router = createBrowserRouter([
   {
@@ -15,12 +15,12 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: 'investments',
-        element: <Investments />,
+        path: 'dashboard',
+        element: <Dashboard />,
       },
       {
-        path: 'dividends',
-        element: <Dividends />,
+        path: 'patrimony',
+        element: <Patrimony />,
       },
     ],
   },

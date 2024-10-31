@@ -1,6 +1,6 @@
 import {
   CommonTransaction,
-  Data,
+  Data, ETFDataEntry,
   ETFStatement,
   PEIDataEntry,
   RealEstateDataEntry,
@@ -19,8 +19,9 @@ export const TransactionsUtils = {
     const lddTotal = TransactionsUtils.totalValue(data.ldds_credit_agricole.transactions)
     const bricksTotal = TransactionsUtils.totalValue(data.bricks.transactions)
     const epsorTotal = TransactionsUtils.totalValue(data.epsor.transactions)
+    const peaTotal = TransactionsUtils.totalValue(data.pea.transactions)
 
-    return lddTotal + bricksTotal + epsorTotal
+    return lddTotal + bricksTotal + epsorTotal + peaTotal
   },
 
   accumulate: (transactions: CommonTransaction[]): TransactionWithAccumulatedAmount[] => {
@@ -87,6 +88,13 @@ export const TransactionsUtils = {
     // This will add the last statement rate to the total value
     amountWithLastStatement: (entry: PEIDataEntry): number => {
       return TransactionsUtils.totalValue(entry.transactions) + TransactionsUtils.epsor.estimatedAmount(entry)
+    },
+  },
+
+  pea: {
+    totalInvested: (entries: ETFDataEntry): number => {
+      const investments = entries.stock_market.investments
+      return investments.reduce((acc, investment) => acc + investment.amount, 0)
     },
   },
 }

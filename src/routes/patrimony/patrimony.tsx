@@ -3,16 +3,31 @@ import { useData, useEpsor } from '@/hooks/useData.ts'
 import { TransactionsUtils } from '@/utils/transactions.ts'
 import { currencyFormatter, dateFormatter, percentageFormatter } from '@/utils/formatters.ts'
 import { useNewsFeed } from '@/hooks/useNewsFeed.ts'
-import NewsCard from '@/components/news-card.tsx'
+import NewsList from '@/components/news-list.tsx'
+import { useState } from 'react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select.tsx'
+import { NewsFeedEntry } from '@/domain/models.ts'
 
-export default function Dividends() {
-  const { bricksData, ldds_credit_agricole, epsor } = useData()
-  const newsFeed = useNewsFeed(5, 'DIVIDEND')
+export default function Patrimony() {
+  const { bricksData, ldds_credit_agricole, epsor, pea } = useData()
+
+  const [newsKindToDisplay, setNewsKindToDisplay] = useState<NewsFeedEntry['kind'] | undefined>(undefined)
+
+  const newsFeed = useNewsFeed(5, newsKindToDisplay)
   const { lastStatement, estimatedAmount, amountWithLastStatement } = useEpsor()
+
+  const updateKindToDisplay = (kind: string) => {
+    if (kind === 'ALL') {
+      setNewsKindToDisplay(undefined)
+    }
+    else {
+      setNewsKindToDisplay(kind as NewsFeedEntry['kind'])
+    }
+  }
 
   return (
     <div className="space-y-4">
-      <h2 className="text-3xl font-bold tracking-tight">Mes dividendes</h2>
+      <h2 className="text-3xl font-bold tracking-tight">Mon patrimoine</h2>
       <div className="items-start justify-center gap-6 py-8 grid xl:grid-cols-3 md:grid-cols-2">
         <div className="col-span-2 grid items-start gap-6 lg:col-span-1">
           <Card>
@@ -43,6 +58,28 @@ export default function Dividends() {
                 </span>
                 <span className="font-bold">
                   {currencyFormatter.format(TransactionsUtils.realEstate.totalNetProfitability(bricksData))}
+                </span>
+              </span>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>{pea.label}</CardTitle>
+              <CardDescription>ETF & Actions</CardDescription>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 divide-y text-sm">
+              <span className="flex justify-between py-2">
+                <span>
+                  Ouverture du compte
+                </span>
+                <span>
+                  {dateFormatter.format(new Date(pea.opening_date))}
+                </span>
+              </span>
+              <span className="flex justify-between py-2">
+                <span>Montant maximum</span>
+                <span>
+                  {currencyFormatter.format(150000)}
                 </span>
               </span>
             </CardContent>
@@ -112,9 +149,45 @@ export default function Dividends() {
           </Card>
         </div>
         <div className="col-span-2 grid items-start gap-6 lg:col-span-1">
-          <NewsCard
-            newsFeed={newsFeed}
-          />
+          <Card>
+            <CardHeader>
+              <CardTitle>Actualités</CardTitle>
+              <CardDescription>Que s&apos;est-il passé récemment ?</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Select value={newsKindToDisplay || 'ALL'} onValueChange={updateKindToDisplay}>
+                <SelectTrigger
+                  className="ml-auto h-7 w-[170px] rounded-sm pl-2.5"
+                  aria-label="Select a value"
+                >
+                  <SelectValue placeholder="Séctionnez un type d'investissement" />
+                </SelectTrigger>
+                <SelectContent align="end" className="rounded-sm">
+                  {['ALL', 'INVESTMENT', 'DIVIDEND', 'INFO'].map((key: string) => {
+                    return (
+                      <SelectItem
+                        key={key}
+                        value={key}
+                        className="rounded-lg [&_span]:flex"
+                      >
+                        <div className="flex items-center gap-2 text-xs">
+                          <span
+                            data-kind={key}
+                            className="flex h-3 w-3 shrink-0 rounded-sm data-[kind=ALL]:bg-accent data-[kind=INVESTMENT]:bg-chart-1 data-[kind=DIVIDEND]:bg-primary data-[kind=INFO]:bg-chart-4"
+                          />
+                          {key === 'ALL' && 'Tous'}
+                          {key === 'INVESTMENT' && 'Investissements'}
+                          {key === 'DIVIDEND' && 'Rentrées d\'argent'}
+                          {key === 'INFO' && 'Informations'}
+                        </div>
+                      </SelectItem>
+                    )
+                  })}
+                </SelectContent>
+              </Select>
+              <NewsList newsFeed={newsFeed} />
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
