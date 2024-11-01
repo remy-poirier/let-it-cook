@@ -5,8 +5,12 @@ import { TransactionsUtils } from '@/utils/transactions.ts'
 export const useData = () => {
   const data = dataJson as Data
 
+  // Create object with everything except the savings
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { savings, ...dataWithoutSavings } = data
+
   return {
-    fullData: data,
+    fullData: dataWithoutSavings,
     ldds_credit_agricole: data.ldds_credit_agricole,
     bricksData: data.bricks,
     epsor: data.epsor,

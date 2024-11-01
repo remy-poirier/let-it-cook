@@ -29,3 +29,10 @@ export const bricksChartConfig = {
     color: 'hsl(var(--chart-1))',
   },
 } satisfies ChartConfig
+
+export const savingsChartConfig = {
+  amount: {
+    label: 'Montant:',
+    color: 'hsl(var(--chart-1))',
+  },
+}

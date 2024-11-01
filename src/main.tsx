@@ -6,7 +6,10 @@ import Root from '@/routes/root.tsx'
 import { ThemeProvider } from '@/components/theme-provider.tsx'
 import ErrorPage from '@/routes/not-found.tsx'
 import Dashboard from '@/routes/dashboard/dashboard.tsx'
-import Patrimony from '@/routes/patrimony/patrimony.tsx'
+import Savings from '@/routes/patrimony/savings/savings.tsx'
+import RealEstate from '@/routes/patrimony/real-estate.tsx'
+import EmployeeSavings from '@/routes/patrimony/employee-savings.tsx'
+import Stocks from '@/routes/patrimony/stocks.tsx'
 
 const router = createBrowserRouter([
   {
@@ -20,7 +23,24 @@ const router = createBrowserRouter([
       },
       {
         path: 'patrimony',
-        element: <Patrimony />,
+        children: [
+          {
+            path: 'savings',
+            element: <Savings />,
+          },
+          {
+            path: 'real-estate',
+            element: <RealEstate />,
+          },
+          {
+            path: 'stocks',
+            element: <Stocks />,
+          },
+          {
+            path: 'employee-savings',
+            element: <EmployeeSavings />,
+          },
+        ],
       },
     ],
   },

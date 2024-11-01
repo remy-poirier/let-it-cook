@@ -134,6 +134,5 @@ export const TransactionsUtils = {
       const investments = entries.stock_market.investments
       return investments.reduce((acc, investment) => acc + investment.amount, 0)
     },
-
   },
 }

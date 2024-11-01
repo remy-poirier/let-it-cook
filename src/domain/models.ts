@@ -70,11 +70,25 @@ export type PEIDataEntry = CommonDataEntry<CommonTransaction> & {
 
 export type EntryRecords = 'ldds_credit_agricole' | 'bricks' | 'epsor' | 'pea'
 
+export type SavingsDataEntry = {
+  label: string
+  iconUrl: string
+  accounts: SavingAccount[]
+}
+
+export type SavingAccount = {
+  label: string
+  transactions: CommonTransaction[]
+  rate: number
+  maxAmount: number
+}
+
 export type EntryRecordsMapping = {
   ldds_credit_agricole: BookletDataEntry
   bricks: RealEstateDataEntry
   epsor: PEIDataEntry
   pea: ETFDataEntry
+  savings: SavingsDataEntry[]
 }
 
 export type Data = {
