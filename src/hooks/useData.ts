@@ -20,6 +20,12 @@ export const useData = () => {
       ldds_credit_agricole: TransactionsUtils.accumulate(data.ldds_credit_agricole.transactions),
       pea: TransactionsUtils.accumulate(data.pea.transactions),
     },
+
+    bricks: {
+      dividendsChart: TransactionsUtils.realEstate.dividendsChart(data.bricks),
+      investments: TransactionsUtils.realEstate.investmentRepartitions(data.bricks),
+      sumInvestments: TransactionsUtils.realEstate.sumInvestments(data.bricks),
+    },
   }
 }
 

@@ -69,6 +69,44 @@ export const TransactionsUtils = {
     totalNetProfitabilityForDividendEntry: (dividendEntry: RealEstateDividend): number => {
       return TransactionsUtils.realEstate.profitabilityForDividendEntry(dividendEntry) + TransactionsUtils.realEstate.taxForDividendEntry(dividendEntry)
     },
+
+    dividendsChart: (epsorData: RealEstateDataEntry) => {
+      return epsorData.dividends.reduce((acc, dividend, index) => {
+        let previousAmount = 0
+        if (index > 0) {
+          previousAmount = acc[index - 1].amount
+        }
+        acc.push({
+          date: dividend.date,
+          amount: TransactionsUtils.realEstate.profitabilityForDividendEntry(dividend) + TransactionsUtils.realEstate.taxForDividendEntry(dividend) + previousAmount,
+        })
+
+        return acc
+      }, [] as { date: string, amount: number }[])
+    },
+
+    investmentRepartitions: (epsorData: RealEstateDataEntry) => {
+      const allInvestments = epsorData.transactions.map(transaction => ({
+        amount: transaction.amount,
+        label: transaction.label,
+      }))
+
+      // For investments having the same label, we sum the amounts
+      return allInvestments.reduce((acc, investment) => {
+        const existingInvestment = acc.find(i => i.label === investment.label)
+        if (existingInvestment) {
+          existingInvestment.amount += investment.amount
+        }
+        else {
+          acc.push(investment)
+        }
+        return acc
+      }, [] as { amount: number, label: string }[])
+    },
+
+    sumInvestments: (epsorData: RealEstateDataEntry) => {
+      return epsorData.transactions.reduce((acc, transaction) => acc + transaction.amount, 0)
+    },
   },
 
   epsor: {
@@ -96,5 +134,6 @@ export const TransactionsUtils = {
       const investments = entries.stock_market.investments
       return investments.reduce((acc, investment) => acc + investment.amount, 0)
     },
+
   },
 }

@@ -13,7 +13,7 @@ import PatrimonyChart from '@/routes/dashboard/patrimony-chart.tsx'
 export default function Dashboard() {
   const { fullData } = useData()
   const [activeChart, setActiveChart] = useState<EntryRecords>('bricks')
-  const newsFeed = useNewsFeed(3)
+  const newsFeed = useNewsFeed(3, 'INVESTMENT')
   const { investedAmount } = useData()
 
   return (
@@ -53,8 +53,8 @@ export default function Dashboard() {
         <div className="col-span-1 grid">
           <Card>
             <CardHeader>
-              <CardTitle>Actualités</CardTitle>
-              <CardDescription>Que s&apos;est-il passé récemment ?</CardDescription>
+              <CardTitle>Derniers investissements</CardTitle>
+              <CardDescription>Où as-tu investi ton argent ?</CardDescription>
             </CardHeader>
             <CardContent>
               <NewsList newsFeed={newsFeed} />

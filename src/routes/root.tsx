@@ -14,8 +14,8 @@ export default function Root() {
             </a>
             <nav className="flex items-center gap-4 text-sm lg:gap-6">
               <Link
-                to="/dashboard"
-                data-active={location.pathname === '/dashboard'}
+                to="/"
+                data-active={location.pathname === '/'}
                 className="transition-colors hover:text-foreground/80 text-foreground/60 data-[active=true]:text-foreground"
               >
                 Tableau de bord
