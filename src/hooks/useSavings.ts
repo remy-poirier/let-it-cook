@@ -5,7 +5,6 @@ import { SavingsUtils } from '@/utils/savings.ts'
 export const useSavings = () => {
   const { savings } = dataJson as Data
 
-  console.log(savings)
   return {
     savings,
 

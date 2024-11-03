@@ -7,9 +7,10 @@ import { ThemeProvider } from '@/components/theme-provider.tsx'
 import ErrorPage from '@/routes/not-found.tsx'
 import Dashboard from '@/routes/dashboard/dashboard.tsx'
 import Savings from '@/routes/patrimony/savings/savings.tsx'
-import RealEstate from '@/routes/patrimony/real-estate.tsx'
+import RealEstate from '@/routes/patrimony/real-estate/real-estate.tsx'
 import EmployeeSavings from '@/routes/patrimony/employee-savings.tsx'
-import Stocks from '@/routes/patrimony/stocks.tsx'
+import Stocks from '@/routes/patrimony/stocks/stocks.tsx'
+import AnnuityRealEstate from '@/routes/annuity/real-estate/real-estate.tsx'
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,15 @@ const router = createBrowserRouter([
           {
             path: 'employee-savings',
             element: <EmployeeSavings />,
+          },
+        ],
+      },
+      {
+        path: 'annuity',
+        children: [
+          {
+            path: 'real-estate',
+            element: <AnnuityRealEstate />,
           },
         ],
       },

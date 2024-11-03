@@ -12,16 +12,21 @@ export const useNewsFeed = (
   const newsFeed: NewsFeedEntry[] = []
 
   if (!kind || kind === 'INVESTMENT') {
-    data.ldds_credit_agricole
-      .transactions.forEach((transaction) => {
-        newsFeed.push({
-          kind: 'INVESTMENT',
-          label: 'LDD Solidaire Crédit Agricole',
-          description: transaction.label,
-          amount: transaction.amount,
-          date: transaction.date,
+    // Add each transaction of saving with title Account label and description label of transaction
+    data.savings.forEach((saving) => {
+      saving.accounts.forEach((account) => {
+        account.transactions.forEach((transaction) => {
+          newsFeed.push({
+            kind: 'INVESTMENT',
+            label: account.label,
+            description: transaction.label,
+            amount: transaction.amount,
+            date: transaction.date,
+            iconMapping: 'saving-investment',
+          })
         })
       })
+    })
 
     data.bricks
       .transactions.forEach((transaction) => {
@@ -31,6 +36,7 @@ export const useNewsFeed = (
           description: transaction.label,
           amount: transaction.amount,
           date: transaction.date,
+          iconMapping: 'real-estate-investment',
         })
       })
 
@@ -42,29 +48,34 @@ export const useNewsFeed = (
           description: transaction.label,
           amount: transaction.amount,
           date: transaction.date,
+          iconMapping: 'epsor-investment',
         })
       })
 
-    data.pea
-      .transactions.forEach((transaction) => {
+    for (const stock of data.stocks) {
+      for (const investment of stock.investments) {
         newsFeed.push({
           kind: 'INVESTMENT',
-          label: 'PEA',
-          description: transaction.label,
-          amount: transaction.amount,
-          date: transaction.date,
+          label: stock.label,
+          description: investment.label,
+          amount: investment.amount,
+          date: investment.date,
+          iconMapping: 'stock-investment',
         })
-      })
+      }
 
-    data.pea.stock_market.investments.forEach((transaction) => {
-      newsFeed.push({
-        kind: 'INVESTMENT',
-        label: 'Achat d\'actions',
-        description: transaction.label,
-        amount: transaction.amount,
-        date: transaction.date,
-      })
-    })
+      for (const transaction of stock.transactions) {
+        const fund = stock.funds[transaction.fund_id]
+        newsFeed.push({
+          kind: 'INVESTMENT',
+          label: stock.label,
+          description: fund.label,
+          amount: transaction.cost_price * transaction.quantity,
+          date: transaction.date,
+          iconMapping: 'stock-purchase',
+        })
+      }
+    }
   }
 
   if (!kind || kind === 'DIVIDEND') {
@@ -74,25 +85,16 @@ export const useNewsFeed = (
         const tax = TransactionsUtils.realEstate.taxForDividendEntry(dividend)
         newsFeed.push({
           kind: 'DIVIDEND',
-          label: 'Bricks',
+          label: 'Rente',
           description: `Fiscalité déduite: ${currencyFormatter.format(Math.abs(tax))}`,
           amount: totalDividend,
           date: dividend.date,
+          iconMapping: 'real-estate-dividend',
         })
       })
   }
 
   if (!kind || kind === 'INFO') {
-    data.pea.stock_market.statements.forEach((statement) => {
-      newsFeed.push({
-        kind: 'INFO',
-        label: 'Valorisation PEA',
-        description: statement.label,
-        amount: statement.amount,
-        date: statement.date,
-      })
-    })
-
     data.epsor.statements.forEach((statement) => {
       newsFeed.push({
         kind: 'INFO',
@@ -100,6 +102,7 @@ export const useNewsFeed = (
         description: 'Valorisation du compte à date',
         amount: statement.rate,
         date: statement.date,
+        iconMapping: 'info',
       })
     })
   }

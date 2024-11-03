@@ -6,6 +6,8 @@ import {
   RealEstateDataEntry,
   RealEstateDividend,
 } from '@/domain/models.ts'
+import { SavingsUtils } from '@/utils/savings.ts'
+import { StockUtils } from '@/utils/stocks.ts'
 
 type TransactionWithAccumulatedAmount = CommonTransaction & { accumulatedAmount: number }
 
@@ -16,12 +18,14 @@ export const TransactionsUtils = {
 
   totalInvestmentPatrimony: (data: Data): number => {
     // Compute all transactions of all investments
-    const lddTotal = TransactionsUtils.totalValue(data.ldds_credit_agricole.transactions)
     const bricksTotal = TransactionsUtils.totalValue(data.bricks.transactions)
     const epsorTotal = TransactionsUtils.totalValue(data.epsor.transactions)
-    const peaTotal = TransactionsUtils.totalValue(data.pea.transactions)
 
-    return lddTotal + bricksTotal + epsorTotal + peaTotal
+    // New structure
+    const savingsTotal = SavingsUtils.totalAmount(data.savings)
+    const stocksTotal = StockUtils.totalInvestedAmount(data.stocks)
+
+    return savingsTotal + bricksTotal + epsorTotal + stocksTotal
   },
 
   accumulate: (transactions: CommonTransaction[]): TransactionWithAccumulatedAmount[] => {

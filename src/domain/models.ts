@@ -68,7 +68,7 @@ export type PEIDataEntry = CommonDataEntry<CommonTransaction> & {
   statements: ETFStatement[]
 }
 
-export type EntryRecords = 'ldds_credit_agricole' | 'bricks' | 'epsor' | 'pea'
+export type EntryRecords = 'bricks' | 'epsor' | 'savings' | 'stocks'
 
 export type SavingsDataEntry = {
   label: string
@@ -83,12 +83,39 @@ export type SavingAccount = {
   maxAmount: number
 }
 
+export type StockFund = {
+  label: string
+  country: string
+  bank: string
+  current_state: StockFluctuation
+  fluctuations: StockFluctuation[]
+}
+
+export type StockFluctuation = {
+  date: string
+  amount: number
+}
+
+export type StockTransactions = {
+  fund_id: string
+  quantity: number
+  cost_price: number
+  date: string
+}
+
+export type StocksDataEntry = {
+  label: string
+  bank: string
+  funds: Record<string, StockFund>
+  transactions: StockTransactions[]
+  investments: CommonTransaction[]
+}
+
 export type EntryRecordsMapping = {
-  ldds_credit_agricole: BookletDataEntry
   bricks: RealEstateDataEntry
   epsor: PEIDataEntry
-  pea: ETFDataEntry
   savings: SavingsDataEntry[]
+  stocks: StocksDataEntry[]
 }
 
 export type Data = {
@@ -101,4 +128,5 @@ export interface NewsFeedEntry {
   label: string
   description: string
   amount: number
+  iconMapping: string
 }

@@ -5,10 +5,6 @@ export const chartConfig = {
     label: 'Montant',
     color: '',
   },
-  ldds_credit_agricole: {
-    label: 'LDDS Crédit Agricole',
-    color: 'hsl(var(--chart-1))',
-  },
   bricks: {
     label: 'Bricks',
     color: 'hsl(var(--chart-2))',
@@ -17,15 +13,12 @@ export const chartConfig = {
     label: 'Epsor - PEI',
     color: 'hsl(var(--chart-3))',
   },
-  pea: {
-    label: 'BoursoBank - PEA',
+  stocks: {
+    label: 'PEA',
     color: 'hsl(var(--chart-4))',
   },
-} satisfies ChartConfig
-
-export const bricksChartConfig = {
-  amount: {
-    label: 'Rente',
+  savings: {
+    label: 'Livrets',
     color: 'hsl(var(--chart-1))',
   },
 } satisfies ChartConfig
@@ -34,5 +27,26 @@ export const savingsChartConfig = {
   amount: {
     label: 'Montant:',
     color: 'hsl(var(--chart-1))',
+  },
+}
+
+export const patrimonyBricksChartConfig = {
+  amount: {
+    label: 'Montant:',
+    color: 'hsl(var(--chart-2))',
+  },
+}
+
+export const annuityBricksChartConfig = {
+  amount: {
+    label: 'Montant:',
+    color: 'hsl(var(--chart-1))',
+  },
+}
+
+export const stocksChartConfig = {
+  amount: {
+    label: 'Montant:',
+    color: 'hsl(var(--chart-4))',
   },
 }

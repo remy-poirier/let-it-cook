@@ -48,6 +48,14 @@ const patrimonyItems = [
   },
 ]
 
+const annuityItems = [
+  {
+    title: 'Immobilier',
+    url: '/annuity/real-estate',
+    icon: Building,
+  },
+]
+
 export default function AppSidebar() {
   const { setTheme, theme } = useTheme()
   const location = useLocation()
@@ -82,6 +90,23 @@ export default function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {patrimonyItems.map(item => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton isActive={isActive(item.url)} asChild>
+                    <Link to={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Rentes</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {annuityItems.map(item => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton isActive={isActive(item.url)} asChild>
                     <Link to={item.url}>

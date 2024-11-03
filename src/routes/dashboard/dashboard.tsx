@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.tsx'
-import { currencyFormatter } from '@/utils/formatters.ts'
+import { currencyWithoutCentFormatter } from '@/utils/formatters.ts'
 import { FaPiggyBank } from 'react-icons/fa'
 import NewsList from '@/components/news-list.tsx'
 import { useNewsFeed } from '@/hooks/useNewsFeed.ts'
@@ -11,15 +11,14 @@ import PatrimonySelect from '@/routes/dashboard/patrimony-select.tsx'
 import PatrimonyChart from '@/routes/dashboard/patrimony-chart.tsx'
 
 export default function Dashboard() {
-  const { fullData } = useData()
+  const { fullData, investedAmount } = useData()
   const [activeChart, setActiveChart] = useState<EntryRecords>('bricks')
-  const newsFeed = useNewsFeed(3, 'INVESTMENT')
-  const { investedAmount } = useData()
+  const newsFeed = useNewsFeed(4)
 
   return (
     <div className="space-y-4">
       <h2 className="text-3xl font-bold tracking-tight">Tableau de bord</h2>
-      <div className="grid gap-4 lg:grid-cols-3 sm:grid-cols-1">
+      <div className="grid gap-4 lg:grid-cols-5 sm:grid-cols-1">
         <div className="col-span-1 grid gap-4">
           <Card>
             <CardHeader>
@@ -30,7 +29,7 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent className="flex flex-col gap-2">
               <span className="text-2xl font-bold">
-                {currencyFormatter.format(investedAmount)}
+                {currencyWithoutCentFormatter.format(investedAmount)}
               </span>
             </CardContent>
           </Card>
@@ -45,12 +44,12 @@ export default function Dashboard() {
               <span className="text-2xl font-bold">
                 {Object.values(fullData).length}
               </span>
-              <span className="text-muted-foreground text-sm">Investissements dans des actifs différents</span>
+              <span className="text-muted-foreground text-sm">Actifs différents</span>
             </CardContent>
           </Card>
         </div>
         <PieChartRepartition />
-        <div className="col-span-1 grid">
+        <div className="col-span-2 grid">
           <Card>
             <CardHeader>
               <CardTitle>Derniers investissements</CardTitle>

@@ -12,17 +12,20 @@ import { PieSectorDataItem } from 'recharts/types/polar/Pie'
 import { useMemo, useState } from 'react'
 import { useData } from '@/hooks/useData.ts'
 import { EntryRecords } from '@/domain/models.ts'
-import { TransactionsUtils } from '@/utils/transactions.ts'
 import { chartConfig } from '@/utils/chart-config.ts'
 
 export default function PieChartRepartition() {
-  const { fullData } = useData()
-  const [pieChartActiveKind, setPieChartActiveKind] = useState<string>('bricks')
+  const { pieChartData, chartData } = useData()
+  const [pieChartActiveKind, setPieChartActiveKind] = useState<EntryRecords>('bricks')
 
-  const totalValues = Object.entries(fullData).reduce((acc, [key, value]) => {
+  const onActivePieChartKindChange = (kind: EntryRecords) => {
+    setPieChartActiveKind(kind)
+  }
+
+  const totalValues = Object.entries(pieChartData).reduce((acc, [key, value]) => {
     acc.push({
       key,
-      value: TransactionsUtils.totalValue(value.transactions),
+      value: value,
       fill: chartConfig[key as keyof typeof chartConfig]?.color ?? 'hsl(0, 0%, 0%)',
     })
     return acc
@@ -34,14 +37,14 @@ export default function PieChartRepartition() {
     [pieChartActiveKind],
   )
   return (
-    <Card data-chart="interactive-pie" className="col-span-1">
+    <Card data-chart="interactive-pie" className="col-span-2">
       <ChartStyle id="interactive-pie" config={chartConfig} />
       <CardHeader className="flex-row items-start space-y-0 pb-0">
         <div className="grid gap-1">
           <CardTitle>Répartition</CardTitle>
           <CardDescription>De votre patrimoine</CardDescription>
         </div>
-        <Select value={pieChartActiveKind} onValueChange={setPieChartActiveKind}>
+        <Select value={pieChartActiveKind} onValueChange={onActivePieChartKindChange}>
           <SelectTrigger
             className="ml-auto h-7 w-[200px] rounded-sm pl-2.5"
             aria-label="Select a value"
@@ -136,7 +139,7 @@ export default function PieChartRepartition() {
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          {fullData[pieChartActiveKind as EntryRecords].label}
+                          {chartData.label(pieChartActiveKind)}
                         </tspan>
                       </text>
                     )

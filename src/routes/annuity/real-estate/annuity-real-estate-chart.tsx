@@ -1,30 +1,14 @@
-import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
+import { useRealEstate } from '@/hooks/use-real-estate.ts'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart.tsx'
+import { annuityBricksChartConfig } from '@/utils/chart-config.ts'
+import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
 import { currencyFormatter } from '@/utils/formatters.ts'
-import { EntryRecords } from '@/domain/models.ts'
-import { useData } from '@/hooks/useData.ts'
-import { chartConfig } from '@/utils/chart-config.ts'
 
-type Props = {
-  activeChart: EntryRecords
-}
-
-export default function PatrimonyChart({
-  activeChart,
-}: Props) {
-  const { accumulatedTransactions } = useData()
-
-  const transactionsChart = accumulatedTransactions[activeChart]
-
-  console.log('transactionsChart', transactionsChart)
-
+export default function AnnuityRealEstateChart() {
+  const { annuities: { chartData } } = useRealEstate()
   return (
-    <ChartContainer config={chartConfig} className="aspect-auto h-[200px] w-full">
-      <AreaChart
-        accessibilityLayer
-        data={transactionsChart}
-        stackOffset="expand"
-      >
+    <ChartContainer config={annuityBricksChartConfig} className="aspect-auto h-[250px] w-full">
+      <AreaChart accessibilityLayer data={chartData} stackOffset="expand">
         <CartesianGrid vertical={false} />
         <XAxis
           dataKey="date"
@@ -43,8 +27,8 @@ export default function PatrimonyChart({
           cursor={false}
           content={(
             <ChartTooltipContent
-              indicator="line"
-              nameKey="views"
+              indicator="dot"
+              nameKey="amount"
               labelFormatter={(value) => {
                 return new Date(value).toLocaleDateString('fr-FR', {
                   month: 'short',
@@ -57,10 +41,10 @@ export default function PatrimonyChart({
           )}
         />
         <Area
-          dataKey="accumulatedAmount"
-          type="natural"
-          fill={`var(--color-${activeChart})`}
-          stroke={`var(--color-${activeChart})`}
+          type="monotone"
+          dataKey="amount"
+          fill="var(--color-amount)"
+          stroke="var(--color-amount)"
           fillOpacity={0.4}
         />
       </AreaChart>

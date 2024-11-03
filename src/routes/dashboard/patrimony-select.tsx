@@ -1,6 +1,5 @@
 import { EntryRecords } from '@/domain/models.ts'
 import { currencyFormatter } from '@/utils/formatters.ts'
-import { TransactionsUtils } from '@/utils/transactions.ts'
 import { useData } from '@/hooks/useData.ts'
 
 type Props = {
@@ -11,11 +10,10 @@ type Props = {
 export default function PatrimonySelect({
   activeChart, setActiveChart,
 }: Props) {
-  const { fullData } = useData()
+  const { chartData } = useData()
 
-  return ['ldds_credit_agricole', 'bricks', 'epsor', 'pea'].map((key) => {
+  return ['savings', 'bricks', 'epsor', 'stocks'].map((key) => {
     const chartKey = key as EntryRecords
-    if (!fullData[chartKey]) return null
 
     return (
       <button
@@ -25,10 +23,10 @@ export default function PatrimonySelect({
         onClick={() => setActiveChart(chartKey)}
       >
         <span className="text-xs text-muted-foreground">
-          {fullData[chartKey].label}
+          {chartData.label(chartKey)}
         </span>
-        <span className="text-lg font-bold leading-none sm:text-3xl">
-          {currencyFormatter.format(TransactionsUtils.totalValue(fullData[chartKey].transactions))}
+        <span className="text-lg leading-none sm:text-3xl">
+          {currencyFormatter.format(chartData.amount(chartKey))}
         </span>
       </button>
     )

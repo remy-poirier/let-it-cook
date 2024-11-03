@@ -6,7 +6,6 @@ import { currencyFormatter } from '@/utils/formatters.ts'
 
 export default function SavingChart() {
   const { chartData } = useSavings()
-  console.log(chartData)
   return (
     <ChartContainer config={savingsChartConfig} className="aspect-auto h-[250px] w-full">
       <AreaChart accessibilityLayer data={chartData} stackOffset="expand">

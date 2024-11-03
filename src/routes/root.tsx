@@ -8,7 +8,7 @@ export default function Root() {
       <main className="flex-1">
         <SidebarProvider>
           <AppSidebar />
-          <div className="container">
+          <div className="container mb-2">
             <SidebarTrigger />
             <Outlet />
           </div>
