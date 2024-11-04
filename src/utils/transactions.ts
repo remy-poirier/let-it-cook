@@ -1,6 +1,6 @@
 import {
   CommonTransaction,
-  Data, ETFDataEntry,
+  Data,
   ETFStatement,
   PEIDataEntry,
   RealEstateDataEntry,
@@ -53,9 +53,6 @@ export const TransactionsUtils = {
         .flat()
         .filter(transaction => transaction.value < 0)
         .reduce((acc, transaction) => acc + transaction.value, 0)
-    },
-    totalNetProfitability: (transactions: RealEstateDataEntry): number => {
-      return TransactionsUtils.realEstate.totalProfitability(transactions) + TransactionsUtils.realEstate.totalTax(transactions)
     },
 
     profitabilityForDividendEntry: (dividendEntry: RealEstateDividend): number => {
@@ -131,12 +128,10 @@ export const TransactionsUtils = {
     amountWithLastStatement: (entry: PEIDataEntry): number => {
       return TransactionsUtils.totalValue(entry.transactions) + TransactionsUtils.epsor.estimatedAmount(entry)
     },
-  },
 
-  pea: {
-    totalInvested: (entries: ETFDataEntry): number => {
-      const investments = entries.stock_market.investments
-      return investments.reduce((acc, investment) => acc + investment.amount, 0)
+    transactionsFromMostRecentToOldest: (entry: PEIDataEntry): CommonTransaction[] => {
+      const newTransaction = [...entry.transactions]
+      return newTransaction.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     },
   },
 }

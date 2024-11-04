@@ -50,3 +50,10 @@ export const stocksChartConfig = {
     color: 'hsl(var(--chart-4))',
   },
 }
+
+export const employeeSavingsChartConfig = {
+  amount: {
+    label: 'Montant:',
+    color: 'hsl(var(--chart-3))',
+  },
+}

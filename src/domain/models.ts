@@ -65,6 +65,7 @@ export type ETFDataEntry = CommonDataEntry<CommonTransaction> & {
 export type PEIDataEntry = CommonDataEntry<CommonTransaction> & {
   kind: InvestmentKind.ETF
   employer_contribution: number
+  organism: string
   statements: ETFStatement[]
 }
 

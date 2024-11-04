@@ -8,7 +8,7 @@ import ErrorPage from '@/routes/not-found.tsx'
 import Dashboard from '@/routes/dashboard/dashboard.tsx'
 import Savings from '@/routes/patrimony/savings/savings.tsx'
 import RealEstate from '@/routes/patrimony/real-estate/real-estate.tsx'
-import EmployeeSavings from '@/routes/patrimony/employee-savings.tsx'
+import EmployeeSavings from '@/routes/patrimony/employee-savings/employee-savings.tsx'
 import Stocks from '@/routes/patrimony/stocks/stocks.tsx'
 import AnnuityRealEstate from '@/routes/annuity/real-estate/real-estate.tsx'
 

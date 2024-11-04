@@ -7,7 +7,6 @@ import { currencyFormatter } from '@/utils/formatters.ts'
 export default function PatrimonyStocksChart() {
   const { chartData } = useStocks()
 
-  console.log('ok chart data in component => ', chartData)
   return (
     <ChartContainer config={stocksChartConfig} className="aspect-auto h-[250px] w-full">
       <AreaChart data={chartData} accessibilityLayer stackOffset="expand">

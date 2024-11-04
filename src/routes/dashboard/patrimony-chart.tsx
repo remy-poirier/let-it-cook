@@ -16,8 +16,6 @@ export default function PatrimonyChart({
 
   const transactionsChart = accumulatedTransactions[activeChart]
 
-  console.log('transactionsChart', transactionsChart)
-
   return (
     <ChartContainer config={chartConfig} className="aspect-auto h-[200px] w-full">
       <AreaChart
@@ -58,7 +56,7 @@ export default function PatrimonyChart({
         />
         <Area
           dataKey="accumulatedAmount"
-          type="natural"
+          type="basis"
           fill={`var(--color-${activeChart})`}
           stroke={`var(--color-${activeChart})`}
           fillOpacity={0.4}

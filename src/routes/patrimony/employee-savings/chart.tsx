@@ -1,14 +1,14 @@
-import { useRealEstate } from '@/hooks/use-real-estate.ts'
+import { useEmployeeSavings } from '@/hooks/use-employee-savings.ts'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart.tsx'
-import { patrimonyBricksChartConfig } from '@/utils/chart-config.ts'
+import { employeeSavingsChartConfig } from '@/utils/chart-config.ts'
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
 import { currencyFormatter } from '@/utils/formatters.ts'
 
-export default function InvestmentRealEstate() {
-  const { investments: { chartData } } = useRealEstate()
+export default function EmployeeSavingsChart() {
+  const { chartData } = useEmployeeSavings()
   return (
-    <ChartContainer config={patrimonyBricksChartConfig} className="aspect-auto h-[250px] w-full">
-      <AreaChart accessibilityLayer data={chartData} stackOffset="expand">
+    <ChartContainer config={employeeSavingsChartConfig} className="aspect-auto h-[250px] w-full">
+      <AreaChart data={chartData} accessibilityLayer stackOffset="expand">
         <CartesianGrid vertical={false} />
         <XAxis
           dataKey="date"
