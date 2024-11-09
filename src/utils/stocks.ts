@@ -59,8 +59,8 @@ export const StockUtils = {
 
   totalValueForStock: (stock: StocksDataEntry) => {
     return stock.transactions.reduce((acc, transaction) => {
-      const fund = stock.funds[transaction.fund_id]
-      return acc + fund.current_state.amount * transaction.quantity
+      const currentState = StockUtils.getCurrentStateOfFund(stock, transaction.fund_id)
+      return acc + currentState.amount * transaction.quantity
     }, 0)
   },
 
@@ -87,11 +87,18 @@ export const StockUtils = {
   capitalGain: (stock: StocksDataEntry, fundId: string) => {
     const quantity = StockUtils.quantityOfFundId(stock, fundId)
     const costPrice = StockUtils.costPriceOfFundId(stock, fundId) * quantity
-    const actualPrice = stock.funds[fundId].current_state.amount * quantity
+    const currentState = StockUtils.getCurrentStateOfFund(stock, fundId)
+    const actualPrice = currentState.amount * quantity
     // This should return an object with amount and percentage
     const amount = actualPrice - costPrice
     const percentage = (amount / costPrice) * 100
     return { amount, percentage }
+  },
+
+  getCurrentStateOfFund: (stock: StocksDataEntry, fundId: string) => {
+    const fund = stock.funds[fundId]
+    const sortedFluctuations = [...fund.fluctuations].sort((a, b) => a.date.localeCompare(b.date))
+    return sortedFluctuations[sortedFluctuations.length - 1]
   },
 
 }

@@ -18,5 +18,6 @@ export const useStocks = () => {
     quantityOfFundId: (stock: StocksDataEntry, fundId: string) => StockUtils.quantityOfFundId(stock, fundId),
     costPriceOfFundId: (stock: StocksDataEntry, fundId: string) => StockUtils.costPriceOfFundId(stock, fundId),
     capitalGain: (stock: StocksDataEntry, fundId: string) => StockUtils.capitalGain(stock, fundId),
+    getCurrentStateOfFund: (stock: StocksDataEntry, fundId: string) => StockUtils.getCurrentStateOfFund(stock, fundId),
   }
 }

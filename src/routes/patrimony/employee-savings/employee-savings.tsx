@@ -48,7 +48,6 @@ export default function EmployeeSavings() {
       </Alert>
       <Card>
         <CardContent className="px-0 pb-0">
-
           {accounts.map(account => (
             <Accordion key={account.id} type="single" collapsible defaultValue={account.id}>
               <AccordionItem value={account.id} className="border-b-0">

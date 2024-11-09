@@ -23,6 +23,7 @@ export const useRealEstate = () => {
       totalAmount: RealEstateUtils.totalAmount(bricks.transactions),
       investments: RealEstateUtils.investments(bricks.transactions),
       chartData: RealEstateUtils.chartData(bricks.transactions),
+      mostValuable: RealEstateUtils.mostValuableInvestment(bricks.transactions),
     },
   }
 }

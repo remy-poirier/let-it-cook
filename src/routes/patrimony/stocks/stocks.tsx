@@ -21,7 +21,7 @@ const bankNameToImage = (bankName: string) => {
 export default function Stocks() {
   const {
     lastUpdate, totalAmountInvested, stocks, totalValueForStock, quantityOfFundId,
-    costPriceOfFundId, capitalGain,
+    costPriceOfFundId, capitalGain, getCurrentStateOfFund,
   } = useStocks()
 
   return (
@@ -91,7 +91,7 @@ export default function Stocks() {
                       <span
                         className="col-span-1 text-right"
                       >
-                        {currencyFormatter.format(stock.funds[fundId].current_state.amount)}
+                        {currencyFormatter.format(getCurrentStateOfFund(stock, fundId).amount)}
                       </span>
                       <span
                         className="col-span-1 text-right"
@@ -103,14 +103,14 @@ export default function Stocks() {
                       >
                         <div
                           data-status={capitalGain(stock, fundId).amount > 0 ? 'positive' : 'negative'}
-                          className="flex flex-col gap-1 items-end data-[status='positive']:text-green-500 data-[status='negative']:text-red-500"
+                          className="flex flex-col gap-1 items-end data-[status='positive']:text-green-600 data-[status='negative']:text-red-500"
                         >
                           <span className="font-bold">
                             {currencyFormatter.format(capitalGain(stock, fundId).amount)}
                           </span>
                           <span
                             data-status={capitalGain(stock, fundId).amount > 0 ? 'positive' : 'negative'}
-                            className="p-1 rounded text-xs data-[status='negative']:bg-red-200"
+                            className="p-1 rounded text-xs data-[status='negative']:bg-red-200 data-[status='positive']:bg-green-200"
                           >
                             {percentageFormatter.format(capitalGain(stock, fundId).percentage / 100)}
                           </span>

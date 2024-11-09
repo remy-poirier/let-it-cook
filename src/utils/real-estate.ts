@@ -105,4 +105,47 @@ export const RealEstateUtils = {
         })
     },
   },
+
+  mostValuableInvestment: (transactions: RealEstateTransaction[]) => {
+    /**
+		 * We have to take several things in consideration here:
+		 * - Total amount invested
+		 * - profitability
+		 * - duration (in months)
+		 *
+		 * With these 3 infos we can calculate the total profitability,
+		 * we can return an array sorted from the most profitable to the least
+		 * which contains an object containing
+		 * - amount
+		 * - tax
+		 */
+
+    const investments = RealEstateUtils.investments(transactions)
+    const mostValuableInvestment = [...investments].reduce((acc, investment) => {
+      const profitability = investment.profitability
+      const duration = investment.duration
+
+      /**
+			 * Total profitability is in reality total amount received, it should be the sum of all amounts received, which means
+			 * for an investment of 100€ with 10 profitability on 12 months,
+			 * which means 10% on the year, anyway the result should be does 0.83€ per month and we then
+			 * which we can multiply by the duration to get the total profitability
+			 */
+      const totalGrossProfitability = profitability / 100 * investment.amount / 12 * duration
+      const taxAmount = totalGrossProfitability * 0.3
+
+      acc.push({
+        amount: investment.amount,
+        grossProfitability: totalGrossProfitability,
+        tax: taxAmount,
+        netProfitability: totalGrossProfitability - taxAmount,
+        label: investment.label,
+      })
+      return acc
+    }, [] as { amount: number, grossProfitability: number, tax: number, netProfitability: number, label: string }[])
+
+    const sortedInvestments = mostValuableInvestment.sort((a, b) => b.grossProfitability - a.grossProfitability)
+    // keep only the 3 most valuable investments
+    return sortedInvestments.slice(0, 3)
+  },
 }

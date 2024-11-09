@@ -1,8 +1,6 @@
 export enum InvestmentKind {
-  BOOKLET = 'BOOKLET',
   REAL_ESTATE = 'REAL_ESTATE',
   ETF = 'ETF',
-  CRYPTO = 'CRYPTO',
 }
 
 interface CommonDataEntry<T> {
@@ -17,12 +15,9 @@ export interface CommonTransaction {
   label: string
 }
 
-type BookletTransaction = CommonTransaction
-export type RealEstateTransaction = CommonTransaction & { profitability: number }
-
-export interface BookletDataEntry extends CommonDataEntry<BookletTransaction> {
-  kind: InvestmentKind.BOOKLET
-  rate: number
+export type RealEstateTransaction = CommonTransaction & {
+  profitability: number
+  duration: number
 }
 
 export type RealEstateDividendTransaction = {
@@ -43,23 +38,6 @@ export type RealEstateDataEntry = CommonDataEntry<RealEstateTransaction> & {
 export type ETFStatement = {
   date: string
   rate: number
-}
-
-export type ETFStockMarketStatement = {
-  date: string
-  amount: number
-  label: string
-}
-
-export type ETFStockMarket = {
-  investments: CommonTransaction[]
-  statements: ETFStockMarketStatement[]
-}
-
-export type ETFDataEntry = CommonDataEntry<CommonTransaction> & {
-  kind: InvestmentKind.ETF
-  opening_date: string
-  stock_market: ETFStockMarket
 }
 
 export type PEIDataEntry = CommonDataEntry<CommonTransaction> & {

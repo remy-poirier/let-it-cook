@@ -36,7 +36,7 @@ export default function AnnuityRealEstateChart() {
                   year: 'numeric',
                 })
               }}
-              valueFormatter={value => currencyFormatter.format(value as number)}
+              valueFormatter={value => ` ${currencyFormatter.format(value as number)}`}
             />
           )}
         />

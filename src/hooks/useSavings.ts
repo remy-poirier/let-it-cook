@@ -15,6 +15,12 @@ export const useSavings = () => {
     totalAmountForSaving: (saving: SavingsDataEntry) => SavingsUtils.savingAmount(saving),
 
     amountForAccount: (account: SavingAccount) => SavingsUtils.accountAmount(account),
+    completionPercentForAccount: (account: SavingAccount) => {
+      const maxAmount = account.maxAmount
+      const accountAmount = SavingsUtils.accountAmount(account)
+
+      return (accountAmount / maxAmount) * 100
+    },
 
     lastSavingUpdate: SavingsUtils.lastSavingUpdate(savings),
 

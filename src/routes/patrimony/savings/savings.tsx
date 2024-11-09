@@ -4,9 +4,12 @@ import { currencyFormatter, dateFormatter, percentageFormatter } from '@/utils/f
 import { Card, CardContent } from '@/components/ui/card.tsx'
 import creditAgricoleIcon from '@/assets/images/banks/credit-agricole.png'
 import SavingChart from '@/routes/patrimony/savings/chart.tsx'
+import { Progress } from '@/components/ui/progress.tsx'
 
 export default function Savings() {
-  const { savings, totalAmountForSaving, amountForAccount, totalAmount, lastSavingUpdate } = useSavings()
+  const {
+    savings, totalAmountForSaving, amountForAccount, totalAmount, lastSavingUpdate, completionPercentForAccount,
+  } = useSavings()
 
   return (
     <div className="space-y-4">
@@ -52,6 +55,10 @@ export default function Savings() {
                         <span className="font-bold">
                           {account.label}
                         </span>
+                        <div className="flex gap-2 items-center">
+                          <Progress value={completionPercentForAccount(account)} />
+                          {percentageFormatter.format(completionPercentForAccount(account) / 100)}
+                        </div>
                         <span className="text-muted-foreground">
                           Montant maximum:
                           {' '}
