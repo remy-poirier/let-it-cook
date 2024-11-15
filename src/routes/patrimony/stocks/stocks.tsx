@@ -7,6 +7,8 @@ import { Card, CardContent } from '@/components/ui/card.tsx'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion.tsx'
 import bnpLogo from '@/assets/images/banks/bnp.png'
 import boursoramaLogo from '@/assets/images/banks/bourso_bank.png'
+import { useEtfPrice } from '@/hooks/use-etf-price.tsx'
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 
 const bankNameToImage = (bankName: string) => {
   switch (bankName) {
@@ -21,32 +23,49 @@ const bankNameToImage = (bankName: string) => {
 export default function Stocks() {
   const {
     lastUpdate, totalAmountInvested, stocks, totalValueForStock, quantityOfFundId,
-    costPriceOfFundId, capitalGain, getCurrentStateOfFund,
+    costPriceOfFundId, capitalGain,
   } = useStocks()
+
+  const symbol = 'ESE.PA' // Symbole de l'ETF S&P 500
+
+  // Utilisation de React Query pour les données
+  const { data, isLoading } = useEtfPrice(symbol)
 
   return (
     <div className="space-y-4 flex flex-col">
       <h2 className="text-3xl font-bold tracking-tight">Actions</h2>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-4">
+        <span className="text-3xl">{currencyFormatter.format(totalAmountInvested)}</span>
         <span className="text-muted-foreground text-sm">
           Dernier mouvement en date du
           {' '}
           {dateFormatter.format(new Date(lastUpdate))}
         </span>
-        <span className="text-3xl">{currencyFormatter.format(totalAmountInvested)}</span>
+        {data?.date && (
+          <Alert variant="informative">
+            <InfoIcon className="h-4 w-4" />
+
+            <AlertTitle>Information</AlertTitle>
+            <AlertDescription>
+              Dernière actualisation du prix des ETF effectuée le
+              {' '}
+              {dateFormatter.format(new Date(data.date))}
+            </AlertDescription>
+          </Alert>
+        )}
       </div>
-      <Alert variant="informative">
-        <InfoIcon className="h-4 w-4" />
-        <AlertTitle>Information</AlertTitle>
+      <PatrimonyStocksChart />
+      <Alert variant="warning">
+        <ExclamationTriangleIcon className="h-4 w-4" />
+        <AlertTitle>Avertissement</AlertTitle>
         <AlertDescription>
-          Le graphique ci-dessous représente le montant de vos investissements,
+          Le graphique ci-dessus représente le montant de vos investissements,
           {' '}
           <span className="font-bold">en ne tenant pas compte des fluctuations</span>
           {' '}
           actuelles.
         </AlertDescription>
       </Alert>
-      <PatrimonyStocksChart />
       <hr />
       <span className="text-xl font-bold">Comptes</span>
       <Card>
@@ -91,7 +110,9 @@ export default function Stocks() {
                       <span
                         className="col-span-1 text-right"
                       >
-                        {currencyFormatter.format(getCurrentStateOfFund(stock, fundId).amount)}
+                        {isLoading && '...'}
+                        {!isLoading && data?.amount && currencyFormatter.format(data.amount ?? 0)}
+                        {!isLoading && !data && '-'}
                       </span>
                       <span
                         className="col-span-1 text-right"
@@ -102,17 +123,17 @@ export default function Stocks() {
                         className="col-span-1 text-right"
                       >
                         <div
-                          data-status={capitalGain(stock, fundId).amount > 0 ? 'positive' : 'negative'}
-                          className="flex flex-col gap-1 items-end data-[status='positive']:text-green-600 data-[status='negative']:text-red-500"
+                          data-status={data?.amount ? capitalGain(stock, fundId, data?.amount ?? 0).amount > 0 ? 'positive' : 'negative' : 'null'}
+                          className="flex flex-col gap-1 items-end data-[status='positive']:text-green-600 data-[status='negative']:text-red-500 data-[status='null']:text-slate-500"
                         >
                           <span className="font-bold">
-                            {currencyFormatter.format(capitalGain(stock, fundId).amount)}
+                            {data?.amount ? currencyFormatter.format(capitalGain(stock, fundId, data.amount).amount) : '-'}
                           </span>
                           <span
-                            data-status={capitalGain(stock, fundId).amount > 0 ? 'positive' : 'negative'}
-                            className="p-1 rounded text-xs data-[status='negative']:bg-red-200 data-[status='positive']:bg-green-200"
+                            data-status={data?.amount ? capitalGain(stock, fundId, data.amount).amount > 0 ? 'positive' : 'negative' : 'null'}
+                            className="p-1 rounded text-xs data-[status='negative']:bg-red-200 data-[status='positive']:bg-green-200 data-[status='null']:bg-slate-200"
                           >
-                            {percentageFormatter.format(capitalGain(stock, fundId).percentage / 100)}
+                            {data?.amount ? percentageFormatter.format(capitalGain(stock, fundId, data.amount).percentage / 100) : '-'}
                           </span>
                         </div>
                       </span>

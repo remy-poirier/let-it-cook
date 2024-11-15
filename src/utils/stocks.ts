@@ -84,11 +84,10 @@ export const StockUtils = {
     return transaction?.cost_price ?? 0
   },
 
-  capitalGain: (stock: StocksDataEntry, fundId: string) => {
+  capitalGain: (stock: StocksDataEntry, fundId: string, currentPrice: number) => {
     const quantity = StockUtils.quantityOfFundId(stock, fundId)
     const costPrice = StockUtils.costPriceOfFundId(stock, fundId) * quantity
-    const currentState = StockUtils.getCurrentStateOfFund(stock, fundId)
-    const actualPrice = currentState.amount * quantity
+    const actualPrice = currentPrice * quantity
     // This should return an object with amount and percentage
     const amount = actualPrice - costPrice
     const percentage = (amount / costPrice) * 100
