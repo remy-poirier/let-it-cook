@@ -33,7 +33,11 @@ export default function EmployeeSavings() {
           du compte.
         </AlertDescription>
       </Alert>
-      <EmployeeSavingsChart />
+      <Card className="shadow-none">
+        <CardContent>
+          <EmployeeSavingsChart />
+        </CardContent>
+      </Card>
       <hr />
       <span className="text-xl font-bold">Comptes</span>
       <Alert variant="warning">

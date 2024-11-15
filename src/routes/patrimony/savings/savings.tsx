@@ -12,9 +12,9 @@ export default function Savings() {
   } = useSavings()
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 flex flex-col">
       <h2 className="text-3xl font-bold tracking-tight">Livrets</h2>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-2">
         <span className="text-muted-foreground text-sm">
           Dernier mouvement en date du
           {' '}
@@ -22,7 +22,11 @@ export default function Savings() {
         </span>
         <span className="font-bold text-3xl">{currencyFormatter.format(totalAmount)}</span>
       </div>
-      <SavingChart />
+      <Card className="shadow-none">
+        <CardContent>
+          <SavingChart />
+        </CardContent>
+      </Card>
       <span className="text-xl font-bold">Comptes</span>
       <hr />
       <div className="flex w-full justify-between text-muted-foreground text-sm">

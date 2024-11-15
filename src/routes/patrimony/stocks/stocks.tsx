@@ -54,7 +54,12 @@ export default function Stocks() {
           </Alert>
         )}
       </div>
-      <PatrimonyStocksChart />
+      <Card className="shadow-none">
+        <CardContent>
+          <PatrimonyStocksChart />
+
+        </CardContent>
+      </Card>
       <Alert variant="warning">
         <ExclamationTriangleIcon className="h-4 w-4" />
         <AlertTitle>Avertissement</AlertTitle>

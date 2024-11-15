@@ -45,7 +45,11 @@ export default function RealEstate() {
         <AlertTitle>Information utile</AlertTitle>
         <AlertDescription>Le graphique ci-dessous tient compte de la fiscalité (30%)</AlertDescription>
       </Alert>
-      <AnnuityRealEstateChart />
+      <Card className="shadow-none">
+        <CardContent>
+          <AnnuityRealEstateChart />
+        </CardContent>
+      </Card>
       <hr />
       <div className="grid grid-cols-6 gap-6">
         <div className="col-span-3 h-full">
