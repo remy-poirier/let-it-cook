@@ -1,7 +1,7 @@
 import { useStocks } from '@/hooks/use-stocks.ts'
 import { currencyFormatter, dateFormatter, percentageFormatter } from '@/utils/formatters.ts'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx'
-import { InfoIcon } from 'lucide-react'
+import { ArrowBigDown, ArrowDown, ArrowUp, InfoIcon } from 'lucide-react'
 import PatrimonyStocksChart from '@/routes/patrimony/stocks/chart.tsx'
 import { Card, CardContent } from '@/components/ui/card.tsx'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion.tsx'
@@ -116,29 +116,34 @@ export default function Stocks() {
                         className="col-span-1 text-right"
                       >
                         {isLoading && '...'}
-                        {!isLoading && data?.amount && currencyFormatter.format(data.amount ?? 0)}
+                        <span className="flex flex-col items-end">
+                          <span
+                            data-trend={data?.trend}
+                            className="rounded flex items-center gap-1 p-1 data-[trend='down']:text-red-600 data-[trend='down']:bg-red-200 data-[trend='up']:text-green-600 data-[trend='up']:bg-green-200"
+                          >
+                            {!isLoading && data && data.trend && data.trend === 'down' && <span><ArrowDown size={16} /></span>}
+                            {!isLoading && data && data.trend && data.trend === 'up' && <span><ArrowUp size={16} /></span>}
+                            {!isLoading && data?.price && currencyFormatter.format(data.price ?? 0)}
+                          </span>
+                        </span>
                         {!isLoading && !data && '-'}
                       </span>
-                      <span
-                        className="col-span-1 text-right"
-                      >
+                      <span className="col-span-1 text-right">
                         {currencyFormatter.format(totalValueForStock(stock))}
                       </span>
-                      <span
-                        className="col-span-1 text-right"
-                      >
+                      <span className="col-span-1 text-right">
                         <div
-                          data-status={data?.amount ? capitalGain(stock, fundId, data?.amount ?? 0).amount > 0 ? 'positive' : 'negative' : 'null'}
+                          data-status={data?.price ? capitalGain(stock, fundId, data?.price ?? 0).amount > 0 ? 'positive' : 'negative' : 'null'}
                           className="flex flex-col gap-1 items-end data-[status='positive']:text-green-600 data-[status='negative']:text-red-500 data-[status='null']:text-slate-500"
                         >
                           <span className="font-bold">
-                            {data?.amount ? currencyFormatter.format(capitalGain(stock, fundId, data.amount).amount) : '-'}
+                            {data?.price ? currencyFormatter.format(capitalGain(stock, fundId, data.price).amount) : '-'}
                           </span>
                           <span
-                            data-status={data?.amount ? capitalGain(stock, fundId, data.amount).amount > 0 ? 'positive' : 'negative' : 'null'}
+                            data-status={data?.price ? capitalGain(stock, fundId, data.price).amount > 0 ? 'positive' : 'negative' : 'null'}
                             className="p-1 rounded text-xs data-[status='negative']:bg-red-200 data-[status='positive']:bg-green-200 data-[status='null']:bg-slate-200"
                           >
-                            {data?.amount ? percentageFormatter.format(capitalGain(stock, fundId, data.amount).percentage / 100) : '-'}
+                            {data?.price ? percentageFormatter.format(capitalGain(stock, fundId, data.price).percentage / 100) : '-'}
                           </span>
                         </div>
                       </span>

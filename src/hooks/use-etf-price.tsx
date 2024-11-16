@@ -4,6 +4,13 @@ import axios from 'axios'
 type CachedETFPrice = {
   price: string
   date: string
+  trend?: 'up' | 'down'
+}
+
+type ETFPrice = {
+  price: number
+  date: string
+  trend?: 'up' | 'down'
 }
 
 const isSameDay = (date1: string, date2: string): boolean => {
@@ -29,8 +36,9 @@ const fetchETFPrice = async (symbol: string) => {
       try {
         const parsed: CachedETFPrice = JSON.parse(cached)
         return {
-          amount: parseFloat(parsed.price),
+          price: parseFloat(parsed.price),
           date: parsed.date,
+          trend: parsed.trend,
         }
       }
       catch (error) {
@@ -42,21 +50,41 @@ const fetchETFPrice = async (symbol: string) => {
   }
   const price = response.data['Global Quote']['05. price'] ?? '0'
   const date = response.data['Global Quote']['07. latest trading day'] ?? new Date().toISOString()
-  const cachedData: CachedETFPrice = { price, date: new Date().toISOString() }
+
+  const cached = localStorage.getItem('cachedETFPrice')
+  let trend: CachedETFPrice['trend'] = undefined
+
+  if (cached) {
+    try {
+      const parsed: CachedETFPrice = JSON.parse(cached)
+      const previousPrice = parseFloat(parsed.price)
+
+      // Compare les prix pour déterminer la tendance
+      if (previousPrice < parseFloat(price)) {
+        trend = 'up'
+      }
+      else if (previousPrice > parseFloat(price)) {
+        trend = 'down'
+      }
+    }
+    catch (error) {
+      console.error('Erreur de parsing du cache pour calculer la tendance:', error)
+    }
+  }
+
+  const cachedData: CachedETFPrice = { price, date: new Date().toISOString(), trend }
 
   localStorage.setItem('cachedETFPrice', JSON.stringify(cachedData))
 
   return {
-    amount: parseFloat(price),
+    price: parseFloat(price),
     date: date,
+    trend,
   }
 }
 
 export const useEtfPrice = (symbol: string) => {
-  const { data, isLoading } = useQuery<{
-    amount: number
-    date: string
-  }>({
+  const { data, isLoading } = useQuery<ETFPrice>({
     queryKey: ['stock', symbol],
     retry: false,
     queryFn: async () => {
@@ -67,8 +95,9 @@ export const useEtfPrice = (symbol: string) => {
 
           if (isSameDay(parsed.date, new Date().toISOString())) {
             return {
-              amount: parseFloat(parsed.price),
+              price: parseFloat(parsed.price),
               date: parsed.date,
+              trend: parsed.trend,
             }
           }
 
@@ -77,11 +106,13 @@ export const useEtfPrice = (symbol: string) => {
         catch (error) {
           console.error('Erreur de parsing du cache:', error)
           return {
-            amount: 0,
+            price: 0,
             date: new Date().toISOString(),
+            trend: undefined,
           }
         }
       }
+
       return fetchETFPrice(symbol)
     },
   })
