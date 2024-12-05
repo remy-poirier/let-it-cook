@@ -1,7 +1,7 @@
 import { useStocks } from '@/hooks/use-stocks.ts'
 import { currencyFormatter, dateFormatter, percentageFormatter } from '@/utils/formatters.ts'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx'
-import { ArrowBigDown, ArrowDown, ArrowUp, InfoIcon } from 'lucide-react'
+import { ArrowDown, ArrowUp, InfoIcon } from 'lucide-react'
 import PatrimonyStocksChart from '@/routes/patrimony/stocks/chart.tsx'
 import { Card, CardContent } from '@/components/ui/card.tsx'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion.tsx'
@@ -68,7 +68,8 @@ export default function Stocks() {
           {' '}
           <span className="font-bold">en ne tenant pas compte des fluctuations</span>
           {' '}
-          actuelles.
+          actuelles. Il peut également y avoir une divergence entre les montants d'achats compte tenu des frais de courtage
+          qui ne sont pas pris en compte par cette application.
         </AlertDescription>
       </Alert>
       <hr />

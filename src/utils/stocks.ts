@@ -20,10 +20,15 @@ export const StockUtils = {
     }).flat()
   },
 
-  totalInvestment: (stocks: StocksDataEntry[]) => {
+  totalInvestment: (stocks: StocksDataEntry[], lastValue?: number) => {
     const transactions = StockUtils.transactionsWithCurrentPrice(stocks)
 
-    return transactions.reduce((acc, transaction) => acc + transaction.current_price * transaction.quantity, 0)
+    return transactions.reduce((acc, transaction) => {
+      if (lastValue) {
+        return acc + (transaction.quantity * lastValue)
+      }
+      return acc + (transaction.quantity * transaction.cost_price)
+    }, 0)
   },
 
   totalInvestedAmount: (stocks: StocksDataEntry[]) => {
@@ -32,13 +37,21 @@ export const StockUtils = {
     return transactions.reduce((acc, transaction) => acc + transaction.amount, 0)
   },
 
-  chartData: (stocks: StocksDataEntry[]) => {
+  chartData: (stocks: StocksDataEntry[], lastValue?: number) => {
     const transactions = StockUtils
       .transactionsWithCurrentPrice(stocks)
       .map(transaction => ({
         ...transaction,
-        amount: transaction.quantity * transaction.current_price,
+        amount: lastValue ? transaction.quantity * lastValue : transaction.quantity * transaction.cost_price,
       }))
+      .reduce((acc, transaction) => {
+        const previousAmount = acc.length > 0 ? acc[acc.length - 1].amount : 0
+        acc.push({
+          date: transaction.date,
+          amount: transaction.amount + previousAmount,
+        })
+        return acc
+      }, [] as { date: string, amount: number }[])
 
     return transactions
   },
@@ -57,10 +70,10 @@ export const StockUtils = {
     }, [] as { date: string, amount: number }[])
   },
 
-  totalValueForStock: (stock: StocksDataEntry) => {
+  totalValueForStock: (stock: StocksDataEntry, currentEtfPrice?: number) => {
     return stock.transactions.reduce((acc, transaction) => {
-      const currentState = StockUtils.getCurrentStateOfFund(stock, transaction.fund_id)
-      return acc + currentState.amount * transaction.quantity
+      const transactionPrice = currentEtfPrice ? transaction.quantity * currentEtfPrice : transaction.quantity * transaction.cost_price
+      return acc + transactionPrice
     }, 0)
   },
 
@@ -80,8 +93,8 @@ export const StockUtils = {
 	 */
   costPriceOfFundId: (stock: StocksDataEntry, fundId: string) => {
     // get 1st transaction of the fund and returns its cost price
-    const transaction = stock.transactions.find(transaction => transaction.fund_id === fundId)
-    return transaction?.cost_price ?? 0
+    const fund = stock.funds[fundId]
+    return fund.cost_price
   },
 
   capitalGain: (stock: StocksDataEntry, fundId: string, currentPrice: number) => {

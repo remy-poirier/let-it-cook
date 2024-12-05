@@ -4,6 +4,10 @@ import { StockUtils } from '@/utils/stocks.ts'
 
 export const useStocks = () => {
   const { stocks } = dataJson as Data
+  // try to fetch etfPrice from localStorage
+  const etfPrice = localStorage.getItem('cachedETFPrice')
+  const etfPriceValue = etfPrice ? JSON.parse(etfPrice).price : undefined
+  console.log('ok etf price value => ', etfPriceValue)
 
   return {
     lastUpdate: StockUtils.lastUpdate(stocks),
@@ -13,7 +17,7 @@ export const useStocks = () => {
 
     stocks,
 
-    totalValueForStock: (stock: StocksDataEntry) => StockUtils.totalValueForStock(stock),
+    totalValueForStock: (stock: StocksDataEntry) => StockUtils.totalValueForStock(stock, etfPriceValue),
 
     quantityOfFundId: (stock: StocksDataEntry, fundId: string) => StockUtils.quantityOfFundId(stock, fundId),
     costPriceOfFundId: (stock: StocksDataEntry, fundId: string) => StockUtils.costPriceOfFundId(stock, fundId),

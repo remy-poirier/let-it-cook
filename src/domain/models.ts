@@ -68,6 +68,7 @@ export type StockFund = {
   bank: string
   current_state: StockFluctuation
   fluctuations: StockFluctuation[]
+  cost_price: number
 }
 
 export type StockFluctuation = {
